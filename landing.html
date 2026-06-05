@@ -33,7 +33,7 @@
       padding: 16px 5%; display: flex; align-items: center; justify-content: space-between;
     }
 
-    .logo { height: 72px; width: auto; flex-shrink: 0; }
+    .logo { height: 60px; width: auto; flex-shrink: 0; }
     .nav-desktop { display: flex; gap: 40px; align-items: center; }
     .nav-desktop a { color: var(--text-muted); text-decoration: none; font-size: 13px; transition: color 0.3s; }
     .nav-desktop a:hover { color: var(--gold); }
@@ -538,6 +538,8 @@
       if (!documentType) errors.push('Tipo de documento é obrigatório');
       if (!agree) errors.push('Você deve concordar com os termos');
       if (state.files.length === 0) errors.push('Você deve enviar um documento');
+      const totalExtracted = Object.values(state.extractedText).join('').trim();
+      if (state.files.length > 0 && !totalExtracted) errors.push('Aguarde o OCR terminar de processar o documento (pode levar até 60s)');
 
       if (errors.length > 0) {
         alert('Erros encontrados:\n\n' + errors.join('\n'));
@@ -585,24 +587,38 @@
     function renderFileList() {
       const fileList = document.getElementById('fileList');
       fileList.innerHTML = '';
+      const submitBtn = document.getElementById('submitBtn');
+      let anyProcessing = false;
+
       state.files.forEach((file, idx) => {
-        const status = state.extractedText[idx] ? 'success' : 'processing';
+        const done = state.extractedText[idx] !== undefined;
+        if (!done) anyProcessing = true;
         const div = document.createElement('div');
-        div.className = `file-item ${status}`;
-        div.innerHTML = `<span>${file.name}</span><span class="status">${status === 'processing' ? '🔄 OCR...' : '✓'}</span>`;
+        div.className = `file-item ${done ? 'success' : 'processing'}`;
+        div.innerHTML = `<span>${file.name}</span><span class="status">${done ? '✓ OCR pronto' : '🔄 Processando OCR, aguarde...'}</span>`;
         fileList.appendChild(div);
       });
+
+      if (submitBtn && !submitBtn.dataset.loading) {
+        if (anyProcessing && state.files.length > 0) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = '⏳ Aguardando OCR terminar...';
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Analisar Meu Documento Agora';
+        }
+      }
     }
 
     async function processOCR(file) {
       const fileIdx = state.files.indexOf(file);
       try {
         const { data: { text } } = await Tesseract.recognize(file, 'pt_BR');
-        state.extractedText[fileIdx] = text;
+        state.extractedText[fileIdx] = text || ' ';
         renderFileList();
       } catch (error) {
-        alert(`Erro OCR: ${error.message}`);
-        state.extractedText[fileIdx] = '';
+        console.error('Erro OCR:', error);
+        state.extractedText[fileIdx] = 'erro-ocr';
         renderFileList();
       }
     }
