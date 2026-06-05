@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Cobranças Indevidas Itaú | N.H. Brandão Advogados</title>
+    <meta name="description" content="Envie sua fatura ou extrato para análise inicial de possíveis cobranças indevidas no Itaú. Verificação de tarifas, seguros e serviços não contratados.">
+    <meta name="keywords" content="cobrança indevida itaú, tarifa bancária, seguro não contratado, restituição, análise de fatura">
+    <meta property="og:title" content="Análise de Cobranças Indevidas Itaú | N.H. Brandão Advogados">
+    <meta property="og:description" content="Verificar possíveis cobranças indevidas em sua conta ou cartão Itaú.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#2C3E50">
+    
+    <!-- Tesseract.js for OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #2C3E50;
+            --navy-dark: #1A2634;
+            --gold: #B8956A;
+            --gold-light: #D4AF9E;
+            --bg-dark: #0F1419;
+            --bg-card: #1A2634;
+            --text-light: #E8E8E8;
+            --text-muted: #B0B0B0;
+            --border-subtle: rgba(184, 149, 106, 0.15);
+            --success: #22C55E;
+            --alert: #F59E0B;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #161C24 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 20, 25, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1rem 2rem;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            height: 50px;
+        }
+
+        .logo img {
+            height: 100px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(184, 149, 106, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+            .header-container {
+                gap: 1rem;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(184, 149, 106, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            font-weight: 700;
+        }
+
+        .hero-text h1 span {
+            color: var(--gold);
+        }
+
+        .hero-text p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-bullets {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .hero-bullets li {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .hero-bullets li::before {
+            content: '✓';
+            color: var(--gold);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy);
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(184, 149, 106, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--gold);
+            padding: 1rem 2rem;
+            border: 2px solid var(--gold);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(184, 149, 106, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .hero-disclaimer {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .invoice-mockup {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.5) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .invoice-mockup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .invoice-header h3 {
+            font-size: 1rem;
+            color: var(--gold);
+        }
+
+        .invoice-header span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .invoice-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .invoice-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(184, 149, 106, 0.05);
+            border-radius: 6px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .invoice-item.highlighted {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--alert);
+        }
+
+        .invoice-item-name {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .invoice-item-value {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            .hero-visual {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero {
+                padding: 2rem 1rem;
+                margin-top: 100px;
+            }
+            .hero-text h1 {
+                font-size: 1.5rem;
+            }
+            .hero-buttons {
+                flex-direction: column;
+            }
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* Section Spacing */
+        section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        section > p:first-of-type {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 700px;
+        }
+
+        /* Pain/Alert Section */
+        .charges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .charge-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.3) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .charge-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(184, 149, 106, 0.15);
+        }
+
+        .charge-card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .charge-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .charge-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Urgency Section */
+        .urgency-section {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, rgba(42, 61, 77, 0.6) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .urgency-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .urgency-section p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+        }
+
+        /* How It Works */
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+
+        .timeline-step {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.3) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timeline-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -12px;
+            left: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .timeline-step h3 {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .timeline-step p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                display: none;
+            }
+        }
+
+        /* Form Section */
+        .form-section {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.3) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .form-section h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-disclaimer {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(184, 149, 106, 0.05);
+            border-left: 3px solid var(--gold);
+            border-radius: 4px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.85rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 12px rgba(184, 149, 106, 0.2);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group textarea {
+            grid-column: 1 / -1;
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-full-width {
+            grid-column: 1 / -1;
+        }
+
+        .upload-area {
+            grid-column: 1 / -1;
+            border: 2px dashed var(--gold);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(184, 149, 106, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            background: rgba(184, 149, 106, 0.1);
+            border-color: var(--gold-light);
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-area p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .upload-area .upload-highlight {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .file-list {
+            grid-column: 1 / -1;
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid var(--success);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .file-item-name {
+            color: var(--text-light);
+        }
+
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s ease;
+        }
+
+        .file-item-remove:hover {
+            color: #EF4444;
+        }
+
+        .checkbox-group {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 6px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(184, 149, 106, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            grid-column: 1 / -1;
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid var(--success);
+            border-radius: 6px;
+            padding: 1rem;
+            color: var(--text-light);
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* OCR Section */
+        .ocr-section {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, rgba(42, 61, 77, 0.4) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .ocr-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .ocr-result-item {
+            background: rgba(184, 149, 106, 0.05);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .ocr-result-count {
+            font-size: 2rem;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .ocr-result-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Recovery Section */
+        .recovery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .recovery-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.3) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .recovery-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+        }
+
+        .recovery-card h3 {
+            color: var(--gold);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .recovery-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .recovery-disclaimer {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid var(--alert);
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Individual vs Collective */
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .strategy-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.3) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .strategy-card h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .strategy-card ul {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .strategy-card li {
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .strategy-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+        }
+
+        @media (max-width: 768px) {
+            .strategy-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Documentation Section */
+        .docs-checklist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .doc-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(34, 197, 94, 0.05);
+            border-left: 3px solid var(--success);
+            border-radius: 6px;
+        }
+
+        .doc-item-icon {
+            color: var(--success);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .doc-item-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Team/Credentials Section */
+        .credentials-section {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, rgba(42, 61, 77, 0.4) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .credentials-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .credential-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .credential-icon {
+            font-size: 2rem;
+        }
+
+        .credential-item h4 {
+            color: var(--gold);
+            font-size: 0.95rem;
+        }
+
+        .credential-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* FAQ Section */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .faq-item {
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.3) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--bg-card) 0%, rgba(42, 61, 77, 0.3) 100%);
+        }
+
+        .faq-question:hover {
+            background: rgba(184, 149, 106, 0.05);
+        }
+
+        .faq-question h3 {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin: 0;
+            text-align: left;
+        }
+
+        .faq-toggle {
+            color: var(--gold);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(184, 149, 106, 0.02);
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 1.5rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Final CTA Section */
+        .final-cta {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .final-cta h2 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .final-cta p {
+            color: var(--navy-dark);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .final-cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .final-cta .btn-primary {
+            background: var(--navy);
+            color: var(--gold);
+            border: 2px solid var(--navy);
+        }
+
+        .final-cta .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .final-cta .btn-secondary {
+            color: var(--navy);
+            border-color: var(--navy);
+            background: transparent;
+        }
+
+        .final-cta .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .final-cta-disclaimer {
+            font-size: 0.85rem;
+            color: var(--navy-dark);
+        }
+
+        @media (max-width: 640px) {
+            .final-cta-buttons {
+                flex-direction: column;
+            }
+            .final-cta .btn-primary,
+            .final-cta .btn-secondary {
+                width: 100%;
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy-dark);
+            border-top: 1px solid var(--border-subtle);
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: var(--gold);
+        }
+
+        .footer-disclaimer {
+            background: rgba(184, 149, 106, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            background: linear-gradient(135deg, #25D366 0%, #20BA5F 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1) translateY(-4px);
+            box-shadow: 0 12px 32px rgba(37, 211, 102, 0.5);
+        }
+
+        @media (max-width: 640px) {
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 1.5rem;
+                right: 1.5rem;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Utility Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 { margin-top: 2rem; }
+        .mt-3 { margin-top: 3rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo"><img src="logo-nhb-transparent.png" alt="N.H. Brandão Advogados"></a>
+            <nav>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#documentos">Documentos</a>
+                <a href="#faq">Perguntas frequentes</a>
+                <a href="#contato">Fale conosco</a>
+                <button class="cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior: 'smooth'})">Enviar fatura para análise</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text fade-in">
+                <h1>Cobranças do Itaú no seu cartão ou conta podem estar sendo debitadas <span>sem a sua percepção</span></h1>
+                <p>Envie sua fatura ou extrato para uma análise inicial e descubra se existem tarifas, seguros, assistências ou serviços que podem ser questionados.</p>
+                
+                <ul class="hero-bullets">
+                    <li>Análise inicial online</li>
+                    <li>Verificação de faturas e extratos</li>
+                    <li>Possibilidade de restituição de valores</li>
+                    <li>Atendimento em todo o Brasil</li>
+                </ul>
+
+                <div class="hero-buttons">
+                    <button class="btn-primary" onclick="document.getElementById('form-section').scrollIntoView({behavior: 'smooth'})">Quero analisar minhas cobranças</button>
+                    <a href="https://wa.me/5543991032372?text=Olá%2C%20gostaria%20de%20solicitar%20uma%20análise%20de%20possíveis%20cobranças%20bancárias%20indevidas%20em%20minha%20conta%20ou%20cartão." target="_blank" class="btn-secondary">Falar com a equipe pelo WhatsApp</a>
+                </div>
+
+                <div class="hero-disclaimer">
+                    📋 A análise inicial depende dos documentos enviados e não representa promessa de resultado.
+                </div>
+            </div>
+
+            <div class="hero-visual fade-in" style="animation-delay: 0.2s;">
+                <div class="invoice-mockup">
+                    <div class="invoice-header">
+                        <h3>Fatura do Cartão</h3>
+                        <span>Jun/2024</span>
+                    </div>
+                    <div class="invoice-items">
+                        <div class="invoice-item">
+                            <span class="invoice-item-name">Compras no débito</span>
+                            <span class="invoice-item-value">R$ 2.450,00</span>
+                        </div>
+                        <div class="invoice-item">
+                            <span class="invoice-item-name">Seguro cartão protegido</span>
+                            <span class="invoice-item-value">R$ 12,50</span>
+                        </div>
+                        <div class="invoice-item highlighted">
+                            <span class="invoice-item-name">Cesta de serviços</span>
+                            <span class="invoice-item-value">R$ 8,90</span>
+                        </div>
+                        <div class="invoice-item">
+                            <span class="invoice-item-name">Assistência residencial</span>
+                            <span class="invoice-item-value">R$ 15,00</span>
+                        </div>
+                        <div class="invoice-item highlighted">
+                            <span class="invoice-item-name">Proteção financeira</span>
+                            <span class="invoice-item-value">R$ 9,50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain/Alert Section -->
+    <section id="pain-section">
+        <h2>Você sabe exatamente o que está pagando todo mês?</h2>
+        <p>Muitas cobranças bancárias aparecem com nomes genéricos, valores pequenos ou descrições difíceis de identificar. Com o tempo, esses débitos podem representar um prejuízo relevante para o consumidor.</p>
+        
+        <div class="charges-grid">
+            <div class="charge-card fade-in">
+                <div class="charge-card-icon">🛡️</div>
+                <h3>Seguro não contratado</h3>
+                <p>Cobranças de seguros que você não autorizou ou não se lembra de ter contratado.</p>
+            </div>
+            <div class="charge-card fade-in" style="animation-delay: 0.1s;">
+                <div class="charge-card-icon">📦</div>
+                <h3>Cesta de serviços</h3>
+                <p>Pacotes de serviços agrupados com valores pequenos mas contínuos.</p>
+            </div>
+            <div class="charge-card fade-in" style="animation-delay: 0.2s;">
+                <div class="charge-card-icon">💳</div>
+                <h3>Tarifa bancária</h3>
+                <p>Tarifas por manutenção de conta, transferências ou outros serviços.</p>
+            </div>
+            <div class="charge-card fade-in" style="animation-delay: 0.3s;">
+                <div class="charge-card-icon">🔒</div>
+                <h3>Proteção financeira</h3>
+                <p>Serviços de proteção que aparecem automaticamente nas faturas.</p>
+            </div>
+            <div class="charge-card fade-in" style="animation-delay: 0.4s;">
+                <div class="charge-card-icon">🏠</div>
+                <h3>Assistência residencial</h3>
+                <p>Serviços de assistência vinculados à conta ou cartão.</p>
+            </div>
+            <div class="charge-card fade-in" style="animation-delay: 0.5s;">
+                <div class="charge-card-icon">⚙️</div>
+                <h3>Cobrança recorrente desconhecida</h3>
+                <p>Qualquer débito periódico que você não consegue identificar a origem.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Urgency Section -->
+    <section>
+        <div class="urgency-section fade-in">
+            <h2>Quanto antes você verificar, mais rápido poderá entender se existe algo a questionar</h2>
+            <p>Cobranças recorrentes podem continuar sendo debitadas mês após mês. Por isso, a análise dos extratos e faturas ajuda a identificar valores que merecem atenção.</p>
+            <button class="btn-primary" onclick="document.getElementById('form-section').scrollIntoView({behavior: 'smooth'})">Verificar minhas cobranças agora</button>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="como-funciona">
+        <h2>Como funciona</h2>
+        <p>Nosso processo é simples e estruturado em etapas claras.</p>
+        
+        <div class="timeline">
+            <div class="timeline-step fade-in" data-step="1">
+                <h3>Você envia sua fatura ou extrato</h3>
+                <p>Basta anexar o documento pelo formulário da página.</p>
+            </div>
+            <div class="timeline-step fade-in" style="animation-delay: 0.1s;" data-step="2">
+                <h3>Nossa equipe realiza a análise inicial</h3>
+                <p>Verificamos cobranças, tarifas, seguros, assistências e serviços recorrentes.</p>
+            </div>
+            <div class="timeline-step fade-in" style="animation-delay: 0.2s;" data-step="3">
+                <h3>Você recebe uma orientação preliminar</h3>
+                <p>Informamos se há indícios de cobranças que merecem avaliação jurídica.</p>
+            </div>
+            <div class="timeline-step fade-in" style="animation-delay: 0.3s;" data-step="4">
+                <h3>Avaliamos a medida adequada</h3>
+                <p>O caso pode ser analisado individualmente ou em estratégia coletiva.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section id="form-section" class="fade-in">
+        <div class="form-section">
+            <h2>Envie seus documentos para análise</h2>
+            <div class="form-disclaimer">
+                ✓ Seus documentos serão utilizados exclusivamente para análise preliminar das cobranças informadas. A avaliação jurídica depende da documentação apresentada e das circunstâncias específicas de cada caso.
+            </div>
+
+            <form id="mainForm" class="form-grid">
+                <!-- Personal Info -->
+                <div class="form-group">
+                    <label for="name">Nome completo *</label>
+                    <input type="text" id="name" name="name" placeholder="Seu nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cpf">CPF *</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail *</label>
+                    <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsapp">WhatsApp *</label>
+                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(43) 99103-2372" required>
+                </div>
+
+                <!-- Location -->
+                <div class="form-group">
+                    <label for="city">Cidade *</label>
+                    <input type="text" id="city" name="city" placeholder="Sua cidade" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="state">Estado *</label>
+                    <select id="state" name="state" required>
+                        <option value="">Selecione o estado</option>
+                        <option value="AC">Acre</option>
+                        <option value="AL">Alagoas</option>
+                        <option value="AP">Amapá</option>
+                        <option value="AM">Amazonas</option>
+                        <option value="BA">Bahia</option>
+                        <option value="CE">Ceará</option>
+                        <option value="DF">Distrito Federal</option>
+                        <option value="ES">Espírito Santo</option>
+                        <option value="GO">Goiás</option>
+                        <option value="MA">Maranhão</option>
+                        <option value="MT">Mato Grosso</option>
+                        <option value="MS">Mato Grosso do Sul</option>
+                        <option value="MG">Minas Gerais</option>
+                        <option value="PA">Pará</option>
+                        <option value="PB">Paraíba</option>
+                        <option value="PR">Paraná</option>
+                        <option value="PE">Pernambuco</option>
+                        <option value="PI">Piauí</option>
+                        <option value="RJ">Rio de Janeiro</option>
+                        <option value="RN">Rio Grande do Norte</option>
+                        <option value="RS">Rio Grande do Sul</option>
+                        <option value="RO">Rondônia</option>
+                        <option value="RR">Roraima</option>
+                        <option value="SC">Santa Catarina</option>
+                        <option value="SP">São Paulo</option>
+                        <option value="SE">Sergipe</option>
+                        <option value="TO">Tocantins</option>
+                    </select>
+                </div>
+
+                <!-- Bank Info -->
+                <div class="form-group form-full-width">
+                    <label for="bankAccount">O cliente possui: *</label>
+                    <select id="bankAccount" name="bankAccount" required>
+                        <option value="">Selecione uma opção</option>
+                        <option value="corrente">Conta corrente Itaú</option>
+                        <option value="cartao">Cartão de crédito Itaú</option>
+                        <option value="ambos">Conta e cartão</option>
+                        <option value="nao-sei">Não sei informar</option>
+                    </select>
+                </div>
+
+                <!-- Document Type -->
+                <div class="form-group form-full-width">
+                    <label for="documentType">Tipo de documento que está enviando: *</label>
+                    <select id="documentType" name="documentType" required>
+                        <option value="">Selecione uma opção</option>
+                        <option value="fatura">Fatura do cartão</option>
+                        <option value="extrato">Extrato bancário</option>
+                        <option value="print">Print da cobrança</option>
+                        <option value="outro">Outro documento</option>
+                    </select>
+                </div>
+
+                <!-- Message -->
+                <div class="form-group form-full-width">
+                    <label for="message">Descrição da cobrança (opcional)</label>
+                    <textarea id="message" name="message" placeholder="Descreva rapidamente a cobrança que chamou sua atenção..."></textarea>
+                </div>
+
+                <!-- Upload -->
+                <div class="upload-area form-full-width" id="uploadArea">
+                    <div class="upload-icon">📄</div>
+                    <p><span class="upload-highlight">Clique ou arraste</span> para enviar (PDF, JPG, PNG - máx 5MB)</p>
+                    <input type="file" id="fileInput" name="files" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                </div>
+
+                <!-- File List -->
+                <div class="file-list" id="fileList"></div>
+
+                <!-- Checkbox -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree" name="agree" required>
+                    <label for="agree">Declaro que autorizo o envio dos meus dados e documentos para análise inicial, nos termos da <a href="#privacy" style="color: var(--gold); cursor: pointer;">política de privacidade</a>. *</label>
+                </div>
+
+                <!-- Success Message -->
+                <div class="success-message" id="successMessage">
+                    ✓ Recebemos suas informações! Nossa equipe fará uma análise inicial dos documentos enviados e entrará em contato pelos canais informados.
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">Enviar documentos para análise</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- OCR Section -->
+    <section class="fade-in">
+        <div class="ocr-section">
+            <h2>Análise inteligente de faturas e extratos</h2>
+            <p>Os documentos enviados poderão ser analisados para localizar descrições como seguros, tarifas, assistências, proteção financeira e cobranças recorrentes.</p>
+            
+            <h3 style="color: var(--gold); margin-top: 2rem; margin-bottom: 1rem;">Possíveis cobranças localizadas (exemplo)</h3>
+            <div class="ocr-results">
+                <div class="ocr-result-item fade-in">
+                    <div class="ocr-result-count">2</div>
+                    <div class="ocr-result-label">Seguros / Assistências</div>
+                </div>
+                <div class="ocr-result-item fade-in" style="animation-delay: 0.1s;">
+                    <div class="ocr-result-count">3</div>
+                    <div class="ocr-result-label">Tarifas / Cestas</div>
+                </div>
+                <div class="ocr-result-item fade-in" style="animation-delay: 0.2s;">
+                    <div class="ocr-result-count">1</div>
+                    <div class="ocr-result-label">Cobranças Recorrentes</div>
+                </div>
+            </div>
+
+            <div class="recovery-disclaimer" style="margin-top: 2rem;">
+                ⚠️ A localização de uma cobrança no documento não significa, por si só, que ela seja indevida. É necessária análise jurídica e documental para determinar sua legalidade.
+            </div>
+        </div>
+    </section>
+
+    <!-- Recovery Section -->
+    <section id="recuperacao">
+        <h2>É possível recuperar valores pagos indevidamente?</h2>
+        <p>Dependendo da documentação, da origem da cobrança e das circunstâncias do caso, pode haver possibilidade de pedido de restituição dos valores pagos. Em determinadas situações, a legislação consumerista também pode permitir a restituição em dobro, desde que preenchidos os requisitos legais.</p>
+        
+        <div class="recovery-grid">
+            <div class="recovery-card fade-in">
+                <h3>Cancelamento de cobrança</h3>
+                <p>Solicitação junto ao banco para cessar a cobrança recorrente.</p>
+            </div>
+            <div class="recovery-card fade-in" style="animation-delay: 0.1s;">
+                <h3>Restituição simples</h3>
+                <p>Recuperação dos valores já cobrados indevidamente.</p>
+            </div>
+            <div class="recovery-card fade-in" style="animation-delay: 0.2s;">
+                <h3>Possibilidade de restituição em dobro</h3>
+                <p>Quando a legislação permite, pode haver restituição em dobro do valor cobrado.</p>
+            </div>
+            <div class="recovery-card fade-in" style="animation-delay: 0.3s;">
+                <h3>Avaliação de dano moral</h3>
+                <p>Análise se há possibilidade de compensação por dano moral.</p>
+            </div>
+        </div>
+
+        <div class="recovery-disclaimer">
+            ⚠️ A restituição em dobro não é automática. A viabilidade depende da análise jurídica do caso concreto e do preenchimento dos requisitos legais estabelecidos pela legislação consumerista.
+        </div>
+    </section>
+
+    <!-- Individual vs Collective -->
+    <section>
+        <h2>Análise individual ou estratégia coletiva</h2>
+        <p>Quando vários consumidores apresentam situações semelhantes, o escritório poderá avaliar a viabilidade de uma estratégia coletiva ou de medidas individuais coordenadas.</p>
+        
+        <div class="strategy-grid">
+            <div class="strategy-card fade-in">
+                <h3>Análise Individual</h3>
+                <ul>
+                    <li>Cada caso avaliado separadamente</li>
+                    <li>Estratégia personalizada conforme documentação</li>
+                    <li>Contato direto com o cliente</li>
+                    <li>Ações adaptadas às circunstâncias específicas</li>
+                </ul>
+            </div>
+            <div class="strategy-card fade-in" style="animation-delay: 0.1s;">
+                <h3>Estratégia Coletiva</h3>
+                <ul>
+                    <li>Casos semelhantes agrupados</li>
+                    <li>Redução de custos compartilhados</li>
+                    <li>Força em números</li>
+                    <li>Avaliação de viabilidade prévia</li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="margin-top: 2rem; font-size: 0.95rem; color: var(--text-muted);">
+            <strong>Importante:</strong> Nem todo caso será coletivo. Nem todo caso será judicializado. A estratégia depende integralmente da documentação e da avaliação jurídica realizada pelo escritório.
+        </p>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="documentos">
+        <h2>Quais documentos você pode enviar?</h2>
+        <p>Você pode iniciar enviando apenas a fatura ou extrato onde aparece a cobrança. Caso seja necessário, nossa equipe solicitará documentos complementares.</p>
+        
+        <div class="docs-checklist">
+            <div class="doc-item fade-in">
+                <div class="doc-item-icon">📋</div>
+                <div class="doc-item-text">Fatura do cartão</div>
+            </div>
+            <div class="doc-item fade-in" style="animation-delay: 0.05s;">
+                <div class="doc-item-icon">📄</div>
+                <div class="doc-item-text">Extrato bancário</div>
+            </div>
+            <div class="doc-item fade-in" style="animation-delay: 0.1s;">
+                <div class="doc-item-icon">📸</div>
+                <div class="doc-item-text">Print da cobrança</div>
+            </div>
+            <div class="doc-item fade-in" style="animation-delay: 0.15s;">
+                <div class="doc-item-icon">📜</div>
+                <div class="doc-item-text">Contrato bancário (se tiver)</div>
+            </div>
+            <div class="doc-item fade-in" style="animation-delay: 0.2s;">
+                <div class="doc-item-icon">✅</div>
+                <div class="doc-item-text">Comprovante de pagamento</div>
+            </div>
+            <div class="doc-item fade-in" style="animation-delay: 0.25s;">
+                <div class="doc-item-icon">🪪</div>
+                <div class="doc-item-text">Documentos pessoais</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team/Credentials Section -->
+    <section class="fade-in">
+        <div class="credentials-section">
+            <h2>Análise conduzida por equipe jurídica</h2>
+            <p style="margin-bottom: 2rem;">O atendimento é realizado pelo escritório N.H. Brandão e Advogados Associados, com atuação voltada à análise jurídica de cobranças, contratos, relações de consumo e recuperação de valores.</p>
+            
+            <div class="credentials-list">
+                <div class="credential-item fade-in">
+                    <div class="credential-icon">🌐</div>
+                    <h4>Atendimento Online</h4>
+                    <p>100% digital e seguro</p>
+                </div>
+                <div class="credential-item fade-in" style="animation-delay: 0.1s;">
+                    <div class="credential-icon">🇧🇷</div>
+                    <h4>Atendimento Nacional</h4>
+                    <p>Em todo o Brasil</p>
+                </div>
+                <div class="credential-item fade-in" style="animation-delay: 0.2s;">
+                    <div class="credential-icon">📋</div>
+                    <h4>Análise Documental</h4>
+                    <p>Verificação técnica completa</p>
+                </div>
+                <div class="credential-item fade-in" style="animation-delay: 0.3s;">
+                    <div class="credential-icon">💬</div>
+                    <h4>Comunicação WhatsApp</h4>
+                    <p>Rápida e prática</p>
+                </div>
+                <div class="credential-item fade-in" style="animation-delay: 0.4s;">
+                    <div class="credential-icon">📖</div>
+                    <h4>Linguagem Clara</h4>
+                    <p>Sem juridiquês excessivo</p>
+                </div>
+                <div class="credential-item fade-in" style="animation-delay: 0.5s;">
+                    <div class="credential-icon">⚖️</div>
+                    <h4>Avaliação Individual</h4>
+                    <p>Conforme particularidades</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq">
+        <h2>Perguntas frequentes</h2>
+        
+        <div class="faq-list">
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>A análise inicial tem custo?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        A análise inicial dos documentos enviados pode ser realizada sem custo, para verificar se há indícios de cobranças que merecem avaliação jurídica.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.05s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>Preciso ir até o escritório?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Não. O procedimento inicial pode ser realizado online, com envio dos documentos pelo formulário ou WhatsApp. Todo o processo é 100% digital.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.1s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>Quais documentos preciso enviar?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Você pode iniciar enviando fatura do cartão, extrato bancário ou print da cobrança. Se necessário, documentos complementares serão solicitados pela equipe.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.15s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>A cobrança localizada será automaticamente considerada indevida?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Não. A localização de uma cobrança no documento não significa, por si só, que ela seja indevida. É necessária análise jurídica e documental para determinar sua legalidade.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.2s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>Posso receber valores em dobro?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Em determinadas situações, a legislação pode permitir pedido de restituição em dobro. Porém, isso não é automático e depende da análise do caso concreto, dos requisitos legais preenchidos e da documentação apresentada.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.25s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>Existe ação coletiva?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Quando houver situações semelhantes entre vários consumidores, poderá ser avaliada a viabilidade de estratégia coletiva ou medidas individuais coordenadas. A decisão dependerá da análise técnica do caso.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.3s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>Tenho conta antiga no Itaú. Posso enviar mesmo assim?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Sim. A análise pode verificar documentos atuais ou antigos, conforme a documentação disponível e as situações específicas de cada caso.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.35s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>Posso enviar apenas uma fatura?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Sim. A partir dela, a equipe poderá orientar se há necessidade de outros documentos e se há indícios relevantes a investigar.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in" style="animation-delay: 0.4s;">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                    <h3>O escritório garante resultado?</h3>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Não. Nenhum resultado é garantido. A atuação depende da documentação apresentada, da análise jurídica realizada e da decisão das autoridades competentes, quando houver medida judicial.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="fade-in">
+        <div class="final-cta">
+            <h2>Envie sua fatura e entenda se existem cobranças que merecem análise</h2>
+            <p>Uma verificação simples pode ajudar você a identificar tarifas, seguros e serviços que passaram despercebidos.</p>
+            
+            <div class="final-cta-buttons">
+                <button class="btn-primary" onclick="document.getElementById('form-section').scrollIntoView({behavior: 'smooth'})">Enviar minha fatura agora</button>
+                <a href="https://wa.me/5543991032372?text=Olá%2C%20gostaria%20de%20solicitar%20uma%20análise%20de%20possíveis%20cobranças%20bancárias%20indevidas%20em%20minha%20conta%20ou%20cartão." target="_blank" class="btn-secondary">Falar pelo WhatsApp</a>
+            </div>
+
+            <div class="final-cta-disclaimer">
+                Análise sujeita à avaliação individual. Não há promessa de resultado.
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contato">
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-section">
+                    <h3>N.H. Brandão e Advogados Associados</h3>
+                    <p>Advocacia e Consultoria Jurídica</p>
+                    <p style="margin-top: 1rem;">Atendimento online em todo o Brasil</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Contato</h3>
+                    <p>📞 WhatsApp: <a href="https://wa.me/5543991032372" target="_blank">(43) 99103-2372</a></p>
+                    <p>📧 E-mail: <a href="mailto:contato@nhbrandao.adv.br">contato@nhbrandao.adv.br</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Links Úteis</h3>
+                    <p><a href="#privacy" onclick="showModal('privacy')">Política de Privacidade</a></p>
+                    <p><a href="#terms" onclick="showModal('terms')">Termos de Uso</a></p>
+                </div>
+            </div>
+
+            <div class="footer-disclaimer">
+                <strong>Aviso Legal:</strong> A análise inicial não representa promessa de resultado. Cada caso será avaliado individualmente conforme a documentação apresentada e a legislação aplicável. As informações desta página possuem finalidade informativa e não substituem consulta jurídica individualizada.
+            </div>
+
+            <div class="footer-bottom">
+                © 2024 N.H. Brandão e Advogados Associados. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/5543991032372?text=Olá%2C%20gostaria%20de%20solicitar%20uma%20análise%20de%20possíveis%20cobranças%20bancárias%20indevidas%20em%20minha%20conta%20ou%20cartão." target="_blank" class="whatsapp-float" title="Falar no WhatsApp">
+        💬
+    </a>
+
+    <script>
+        // OCR Analysis
+        let extractedText = '';
+        let isProcessing = false;
+
+        async function processOCR(files) {
+            if (!files || files.length === 0) return;
+            
+            const file = files[0];
+            isProcessing = true;
+            
+            // Mostrar loader
+            const uploadArea = document.getElementById('uploadArea');
+            const originalHTML = uploadArea.innerHTML;
+            uploadArea.innerHTML = '<p style="color: var(--gold);">🔄 Processando OCR... Isso pode levar alguns segundos...</p>';
+            uploadArea.style.opacity = '0.6';
+            uploadArea.style.pointerEvents = 'none';
+
+            try {
+                // Ler arquivo
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const imageData = e.target.result;
+                        
+                        // Usar Tesseract.js para extrair texto
+                        const { data: { text } } = await Tesseract.recognize(
+                            imageData,
+                            'por',
+                            {
+                                logger: m => console.log('OCR Progress:', m.progress)
+                            }
+                        );
+                        
+                        extractedText = text;
+                        
+                        // Restaurar interface
+                        uploadArea.innerHTML = originalHTML;
+                        uploadArea.style.opacity = '1';
+                        uploadArea.style.pointerEvents = 'auto';
+                        isProcessing = false;
+                        
+                        // Mostrar sucesso
+                        alert('✓ Texto extraído com sucesso! Clique em "Enviar documentos para análise" para processar.');
+                    } catch (ocrError) {
+                        console.error('OCR Error:', ocrError);
+                        uploadArea.innerHTML = originalHTML;
+                        uploadArea.style.opacity = '1';
+                        uploadArea.style.pointerEvents = 'auto';
+                        isProcessing = false;
+                        alert('Erro ao processar imagem. Verifique a qualidade e tente novamente.');
+                    }
+                };
+                
+                reader.readAsDataURL(file);
+            } catch (error) {
+                console.error('File reading error:', error);
+                uploadArea.innerHTML = originalHTML;
+                uploadArea.style.opacity = '1';
+                uploadArea.style.pointerEvents = 'auto';
+                isProcessing = false;
+                alert('Erro ao ler arquivo. Verifique e tente novamente.');
+            }
+        }
+
+        // Form handling
+        const form = document.getElementById('mainForm');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const successMessage = document.getElementById('successMessage');
+        let uploadedFiles = [];
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(184, 149, 106, 0.15)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = 'rgba(184, 149, 106, 0.05)';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(184, 149, 106, 0.05)';
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            for (let file of files) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Arquivo muito grande. Máximo de 5MB.');
+                    continue;
+                }
+                uploadedFiles.push(file);
+                // Iniciar OCR automaticamente
+                processOCR([file]);
+            }
+            renderFileList();
+        }
+
+        function renderFileList() {
+            fileList.innerHTML = '';
+            uploadedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span class="file-item-name">✓ ${file.name}</span>
+                    <button type="button" class="file-item-remove" onclick="removeFile(${index})">✕</button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            if (uploadedFiles.length === 0) {
+                extractedText = '';
+            }
+            renderFileList();
+        }
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validate required fields
+            const name = document.getElementById('name').value;
+            const cpf = document.getElementById('cpf').value;
+            const email = document.getElementById('email').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const bankAccount = document.getElementById('bankAccount').value;
+            const documentType = document.getElementById('documentType').value;
+            const agree = document.getElementById('agree').checked;
+
+            if (!name || !cpf || !email || !whatsapp || !city || !state || !bankAccount || !documentType || !agree) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            if (!extractedText) {
+                alert('Por favor, envie um documento para análise.');
+                return;
+            }
+
+            // Desabilitar botão
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Analisando...';
+
+            try {
+                // Enviar para API
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        extractedText,
+                        clientName: name,
+                        clientEmail: email,
+                        clientCPF: cpf,
+                        clientPhone: whatsapp,
+                        clientCity: city,
+                        clientState: state,
+                        bankAccount,
+                        documentType,
+                    }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Mostrar resultado
+                    showAnalysisResults(result.detectedCharges);
+                    
+                    // Mostrar mensagem de sucesso
+                    successMessage.innerHTML = `
+                        ✓ <strong>Análise concluída!</strong><br>
+                        Resultado enviado para seu email. 
+                        ${result.detectedCharges.length > 0 
+                            ? `Detectamos ${result.detectedCharges.length} categoria(s) de cobrança.` 
+                            : 'Nenhuma cobrança suspeita foi detectada.'}
+                    `;
+                    successMessage.classList.add('show');
+                    
+                    // Reset form
+                    setTimeout(() => {
+                        form.reset();
+                        uploadedFiles = [];
+                        extractedText = '';
+                        renderFileList();
+                        successMessage.classList.remove('show');
+                    }, 3000);
+                } else {
+                    alert('Erro na análise: ' + (result.error || 'Tente novamente'));
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Erro ao enviar dados. Verifique sua conexão e tente novamente.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+
+        function showAnalysisResults(detectedCharges) {
+            // Criar modal de resultados
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+            `;
+
+            let chargesHTML = '';
+            if (detectedCharges.length === 0) {
+                chargesHTML = '<p style="color: var(--success);">✓ Nenhuma cobrança suspeita detectada.</p>';
+            } else {
+                chargesHTML = '<table style="width: 100%; border-collapse: collapse;">';
+                chargesHTML += '<tr style="background: var(--navy-dark);"><th style="padding: 10px; text-align: left; color: var(--gold);">Categoria</th><th style="padding: 10px; text-align: left; color: var(--gold);">Ocorrências</th><th style="padding: 10px; text-align: left; color: var(--gold);">Confiança</th></tr>';
+                
+                for (const charge of detectedCharges) {
+                    const bar = '█'.repeat(Math.round(charge.confidence / 10)) + '░'.repeat(10 - Math.round(charge.confidence / 10));
+                    chargesHTML += `
+                        <tr style="border-bottom: 1px solid var(--border-subtle);">
+                            <td style="padding: 10px; color: var(--gold);">${charge.category}</td>
+                            <td style="padding: 10px; color: var(--text-muted);">${charge.instances}</td>
+                            <td style="padding: 10px; color: var(--text-muted);">${bar} ${charge.confidence}%</td>
+                        </tr>
+                    `;
+                }
+                chargesHTML += '</table>';
+            }
+
+            modal.innerHTML = `
+                <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 2rem; max-width: 600px; max-height: 80vh; overflow-y: auto; color: var(--text-light);">
+                    <h2 style="color: var(--gold); margin-bottom: 1rem;">📊 Resultado da Análise</h2>
+                    ${chargesHTML}
+                    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); font-size: 0.9rem; color: var(--text-muted);">
+                        <p>✉️ Um email detalhado foi enviado para você com os resultados completos.</p>
+                        <p style="margin-top: 0.5rem;">⚖️ Esta análise é preliminar. Consulte nossa equipe para orientação jurídica.</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="width: 100%; margin-top: 1rem; padding: 0.75rem; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: var(--navy); border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Fechar</button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeIn 0.6s ease forwards';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+
+        // Modal functions
+        function showModal(type) {
+            if (type === 'privacy') {
+                alert('Política de Privacidade\n\nOs dados enviados por meio desta página serão utilizados exclusivamente para análise preliminar das cobranças informadas e eventual contato do escritório. Os documentos anexados serão tratados com confidencialidade.\n\nBase na LGPD - Lei Geral de Proteção de Dados Pessoais.');
+            } else if (type === 'terms') {
+                alert('Termos de Uso\n\nEsta página oferece análise preliminar de cobranças bancárias. A análise não representa promessa de resultado. Cada caso será avaliado individualmente conforme a legislação aplicável.');
+            }
+        }
+
+        // Smooth scroll behavior for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('onclick')) return;
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

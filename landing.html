@@ -1,0 +1,692 @@
+<!-- OCR Landing Page - N.H. Brandão Advogados -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análise de Cobranças Indevidas - N.H. Brandão Advogados</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0F1419; color: #E8E8E8; overflow-x: hidden; }
+
+    :root {
+      --navy: #2C3E50;
+      --navy-dark: #1A2634;
+      --gold: #B8956A;
+      --gold-light: #D4AF9E;
+      --bg-dark: #0F1419;
+      --bg-card: #1A2634;
+      --text-light: #E8E8E8;
+      --text-muted: #B0B0B0;
+      --border-subtle: rgba(184, 149, 106, 0.15);
+      --success: #22C55E;
+      --alert: #F59E0B;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(15, 20, 25, 0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle); width: 100%;
+      padding: 16px 5%; display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .logo { height: 48px; }
+    .nav-desktop { display: flex; gap: 40px; align-items: center; }
+    .nav-desktop a { color: var(--text-muted); text-decoration: none; font-size: 13px; transition: color 0.3s; }
+    .nav-desktop a:hover { color: var(--gold); }
+
+    .btn-nav { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #000; padding: 10px 24px; border-radius: 4px; text-decoration: none; font-weight: 600; font-size: 12px; border: none; cursor: pointer; transition: all 0.3s; }
+    .btn-nav:hover { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(184, 149, 106, 0.3); }
+
+    .hamburger { display: none; flex-direction: column; gap: 6px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--gold); transition: all 0.3s; }
+
+    @media (max-width: 768px) {
+      .nav-desktop { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; background: linear-gradient(135deg, var(--navy-dark), var(--bg-dark));
+      display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+      gap: 60px; padding: 120px 5% 60px; position: relative;
+    }
+
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(184, 149, 106, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+    .hero h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 24px; color: var(--text-light); }
+    .hero h1 strong { color: var(--gold); }
+    .hero-desc { font-size: 1rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 32px; max-width: 500px; }
+
+    .hero-bullets { list-style: none; margin-bottom: 40px; }
+    .hero-bullets li { display: flex; gap: 12px; margin-bottom: 12px; color: var(--text-light); font-size: 14px; }
+    .hero-bullets li::before { content: '✓'; color: var(--success); font-weight: bold; min-width: 20px; }
+
+    .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn-primary, .btn-secondary {
+      padding: 14px 32px; border-radius: 6px; font-weight: 600; font-size: 14px;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: all 0.3s; display: inline-block;
+    }
+
+    .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #000; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(184, 149, 106, 0.3); }
+
+    .btn-secondary { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+    .btn-secondary:hover { background: var(--gold); color: #000; box-shadow: 0 8px 16px rgba(184, 149, 106, 0.2); }
+
+    .hero-visual { position: relative; z-index: 2; }
+    .mockup-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; max-width: 400px; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); }
+    .mockup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .mockup-header h4 { color: var(--gold); font-size: 14px; font-weight: 600; }
+    .mockup-date { color: var(--text-muted); font-size: 12px; }
+    .mockup-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+    .mockup-item:last-child { border: none; }
+    .item-name { color: var(--text-light); font-size: 13px; }
+    .item-value { font-weight: 600; color: var(--text-light); }
+    .item-value.alert { color: var(--alert); }
+
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; gap: 40px; padding: 100px 5% 60px; }
+      .hero-content { order: 2; }
+      .hero-visual { order: 1; }
+      .hero h1 { font-size: 1.8rem; }
+    }
+
+    /* PAIN SECTION */
+    .section-pain { background: var(--bg-dark); padding: 80px 5%; border-top: 1px solid var(--border-subtle); }
+    .section-pain h2 { font-size: 2rem; font-weight: 600; text-align: center; margin-bottom: 60px; color: var(--text-light); }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+    .pain-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 32px; text-align: center; transition: all 0.3s; }
+    .pain-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 8px 16px rgba(184, 149, 106, 0.15); }
+    .pain-icon { font-size: 2rem; margin-bottom: 16px; }
+    .pain-card h3 { color: var(--gold); font-size: 1.1rem; margin-bottom: 12px; }
+    .pain-card p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+
+    /* URGENCY */
+    .section-urgency { background: linear-gradient(135deg, var(--navy), var(--navy-dark)); padding: 60px 5%; text-align: center; border-top: 1px solid var(--border-subtle); }
+    .urgency-card { max-width: 600px; margin: 0 auto; background: rgba(255, 255, 255, 0.05); padding: 40px; border: 1px solid var(--border-subtle); border-radius: 8px; }
+    .urgency-card h2 { color: var(--gold); font-size: 1.8rem; margin-bottom: 16px; }
+    .urgency-card p { color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+
+    /* HOW */
+    .section-how { background: var(--bg-dark); padding: 80px 5%; border-top: 1px solid var(--border-subtle); }
+    .section-how h2 { font-size: 2rem; font-weight: 600; text-align: center; margin-bottom: 60px; color: var(--text-light); }
+
+    .timeline { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; position: relative; }
+    .timeline::before { content: ''; position: absolute; top: 25px; left: 5%; right: 5%; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+    .timeline-step { position: relative; text-align: center; animation: fadeInUp 0.6s ease-out both; }
+    .step-number { width: 50px; height: 50px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 18px; margin: 0 auto 20px; position: relative; z-index: 2; }
+    .timeline-step h3 { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
+    .timeline-step p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+
+    /* FORM */
+    .section-form { background: var(--bg-dark); padding: 80px 5%; border-top: 1px solid var(--border-subtle); }
+    .section-form h2 { font-size: 2rem; font-weight: 600; text-align: center; margin-bottom: 60px; color: var(--text-light); }
+
+    .form-container { max-width: 800px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 40px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-grid.full { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group label { color: var(--text-light); font-weight: 500; margin-bottom: 8px; font-size: 13px; }
+    .required { color: var(--alert); }
+
+    .form-group input, .form-group select, .form-group textarea {
+      background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle);
+      border-radius: 6px; padding: 12px; color: var(--text-light);
+      font-family: inherit; font-size: 14px; transition: border-color 0.3s;
+    }
+
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--gold); background: rgba(0, 0, 0, 0.5);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    /* UPLOAD */
+    .upload-area { border: 2px dashed var(--gold); border-radius: 8px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.3s; background: rgba(184, 149, 106, 0.05); }
+    .upload-area:hover, .upload-area.dragover { background: rgba(184, 149, 106, 0.1); border-color: var(--gold-light); }
+    .upload-icon { font-size: 2rem; margin-bottom: 12px; }
+    .upload-text { color: var(--text-light); font-weight: 500; font-size: 14px; }
+    .upload-hint { color: var(--text-muted); font-size: 12px; margin-top: 8px; }
+
+    .file-list { margin-top: 20px; padding: 20px 0; border-top: 1px solid var(--border-subtle); }
+    .file-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; color: var(--text-light); font-size: 13px; }
+    .file-item.processing { opacity: 0.6; }
+    .file-item.success .status::before { content: '✓ '; color: var(--success); }
+
+    .checkbox-group { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+    .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--gold); }
+    .checkbox-group label { margin: 0; cursor: pointer; font-size: 13px; }
+
+    .disclaimer { background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--alert); padding: 16px; border-radius: 4px; margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    .form-submit {
+      width: 100%; margin-top: 30px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #000; padding: 16px; border: none; border-radius: 6px;
+      font-weight: 600; font-size: 14px; cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .form-submit:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(184, 149, 106, 0.3); }
+    .form-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* MODAL */
+    .modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.8); z-index: 1000;
+      align-items: center; justify-content: center;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: var(--bg-card); border: 1px solid var(--border-subtle);
+      border-radius: 12px; padding: 40px; max-width: 600px;
+      position: relative; max-height: 90vh; overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; color: var(--gold);
+      font-size: 24px; cursor: pointer;
+    }
+
+    .modal h2 { color: var(--gold); margin-bottom: 24px; font-size: 1.5rem; }
+
+    .results-table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+    .results-table thead { border-bottom: 2px solid var(--border-subtle); }
+    .results-table th { color: var(--gold); font-weight: 600; text-align: left; padding: 12px 0; font-size: 13px; }
+    .results-table td { color: var(--text-light); padding: 12px 0; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
+
+    .confidence-bar { width: 100%; height: 6px; background: rgba(34, 197, 94, 0.2); border-radius: 3px; overflow: hidden; }
+    .confidence-fill { height: 100%; background: linear-gradient(90deg, var(--success), var(--gold)); border-radius: 3px; }
+
+    /* FOOTER */
+    footer { background: var(--navy-dark); border-top: 1px solid var(--border-subtle); padding: 60px 5% 30px; }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto 30px; }
+    .footer-col h3 { color: var(--gold); margin-bottom: 16px; font-size: 14px; }
+    .footer-col p { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
+    .footer-links { display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bottom { border-top: 1px solid var(--border-subtle); padding-top: 20px; text-align: center; color: var(--text-muted); font-size: 12px; }
+
+    /* WHATSAPP */
+    .whatsapp-btn {
+      position: fixed; bottom: 30px; right: 30px;
+      width: 60px; height: 60px; background: #25D366;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 28px; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      text-decoration: none; z-index: 99;
+      transition: all 0.3s;
+    }
+
+    .whatsapp-btn:hover { transform: scale(1.1) translateY(-4px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .section-pain h2, .section-how h2 { font-size: 1.5rem; }
+      .hero h1 { font-size: 1.5rem; }
+      .timeline::before { display: none; }
+      .hero-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <img src="logo-nhb-transparent.png" alt="NHB" class="logo">
+    <nav class="nav-desktop">
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#documentos">Documentos</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contato">Contato</a>
+      <button class="btn-nav" onclick="scrollTo('formulario')">Analisar Agora</button>
+    </nav>
+    <div class="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Cobranças do Itaú no seu cartão ou conta podem estar sendo debitadas <strong>sem a sua percepção</strong></h1>
+      <p class="hero-desc">Milhares de clientes descobrem cobranças indevidas todos os dias. Nós usamos IA e OCR para identificar automaticamente as discrepâncias no seu extrato bancário.</p>
+      <ul class="hero-bullets">
+        <li>Análise gratuita de documentos</li>
+        <li>Identificação automática de cobranças suspeitas</li>
+        <li>Equipe jurídica especializada em direitos bancários</li>
+        <li>Recuperação de valores com comprovação</li>
+      </ul>
+      <div class="hero-buttons">
+        <button class="btn-primary" onclick="scrollTo('formulario')">Quero analisar minhas cobranças</button>
+        <a href="https://wa.me/5543991032372?text=Olá!%20Gostaria%20de%20mais%20informações%20sobre%20a%20análise%20de%20cobranças." class="btn-secondary">Falar pelo WhatsApp</a>
+      </div>
+      <div class="disclaimer" style="margin-top: 32px;">⚠️ A análise inicial depende dos documentos enviados. Para análise completa, nossa equipe jurídica entrará em contato.</div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <h4>Extrato Itaú</h4>
+          <span class="mockup-date">Jun 2024</span>
+        </div>
+        <div class="mockup-item">
+          <span class="item-name">Saldo Anterior</span>
+          <span class="item-value">R$ 5.420,00</span>
+        </div>
+        <div class="mockup-item">
+          <span class="item-name">Seguro Cartão Protegido</span>
+          <span class="item-value alert">-R$ 89,90</span>
+        </div>
+        <div class="mockup-item">
+          <span class="item-name">Cesta de Serviços</span>
+          <span class="item-value alert">-R$ 34,50</span>
+        </div>
+        <div class="mockup-item">
+          <span class="item-name">Tarifa de Manutenção</span>
+          <span class="item-value alert">-R$ 20,00</span>
+        </div>
+        <div class="mockup-item">
+          <span class="item-name">Proteção Financeira</span>
+          <span class="item-value alert">-R$ 15,90</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIN -->
+  <section class="section-pain" id="documentos">
+    <h2>Você sabe exatamente o que está pagando todo mês?</h2>
+    <div class="cards-grid">
+      <div class="pain-card"><div class="pain-icon">🏦</div><h3>Cobranças Bancárias</h3><p>Tarifas, seguros e serviços cobrados automaticamente</p></div>
+      <div class="pain-card"><div class="pain-icon">💳</div><h3>Cartão de Crédito</h3><p>Proteção, assistência viagem e programas de pontos</p></div>
+      <div class="pain-card"><div class="pain-icon">🔒</div><h3>Seguros Adicionais</h3><p>Proteção vida, prestamista e cesta de benefícios</p></div>
+      <div class="pain-card"><div class="pain-icon">📱</div><h3>Serviços Digitais</h3><p>Apps, softwares de gestão e plataformas premium</p></div>
+      <div class="pain-card"><div class="pain-icon">⏰</div><h3>Cobranças Ocultas</h3><p>Descrições vagas que você não reconhece</p></div>
+      <div class="pain-card"><div class="pain-icon">⚖️</div><h3>Seus Direitos</h3><p>Você tem direito a devolvição + compensação</p></div>
+    </div>
+  </section>
+
+  <!-- URGENCY -->
+  <section class="section-urgency">
+    <div class="urgency-card">
+      <h2>⏱️ Quanto você perdeu em cobranças indevidas?</h2>
+      <p>A maioria dos nossos clientes descobre que perdeu entre R$ 500 a R$ 5.000 por ano. Essa é uma oportunidade de recuperar esse dinheiro com ajuda especializada.</p>
+      <button class="btn-primary" onclick="scrollTo('formulario')" style="margin: 0 auto; display: block;">Analisar Meu Extrato Agora</button>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="section-how" id="como-funciona">
+    <h2>Como Funciona</h2>
+    <div class="timeline">
+      <div class="timeline-step">
+        <div class="step-number">1</div>
+        <h3>Envie Seu Documento</h3>
+        <p>Faça upload de sua fatura ou extrato (PDF, JPG ou PNG). Máximo 5MB.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">2</div>
+        <h3>OCR Automático</h3>
+        <p>Nossa IA lê o documento e extrai todo o texto automaticamente.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">3</div>
+        <h3>Análise Inteligente</h3>
+        <p>Buscamos padrões de cobranças suspeitas com confiança por categoria.</p>
+      </div>
+      <div class="timeline-step">
+        <div class="step-number">4</div>
+        <h3>Resultado Imediato</h3>
+        <p>Receba relatório detalhado e contato da equipe jurídica especializada.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="section-form" id="formulario">
+    <h2>Envie Seu Documento para Análise</h2>
+    <div class="form-container">
+      <form id="analyzeForm">
+        <div class="form-grid">
+          <div class="form-group"><label>Nome Completo <span class="required">*</span></label><input type="text" id="name" required></div>
+          <div class="form-group"><label>CPF <span class="required">*</span></label><input type="text" id="cpf" placeholder="000.000.000-00" required></div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group"><label>Email <span class="required">*</span></label><input type="email" id="email" required></div>
+          <div class="form-group"><label>WhatsApp <span class="required">*</span></label><input type="tel" id="whatsapp" required></div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group"><label>Cidade <span class="required">*</span></label><input type="text" id="city" required></div>
+          <div class="form-group"><label>Estado <span class="required">*</span></label>
+            <select id="state" required>
+              <option value="">Selecione...</option>
+              <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option><option value="AM">Amazonas</option>
+              <option value="BA">Bahia</option><option value="CE">Ceará</option><option value="DF">Distrito Federal</option><option value="ES">Espírito Santo</option>
+              <option value="GO">Goiás</option><option value="MA">Maranhão</option><option value="MT">Mato Grosso</option><option value="MS">Mato Grosso do Sul</option>
+              <option value="MG">Minas Gerais</option><option value="PA">Pará</option><option value="PB">Paraíba</option><option value="PR">Paraná</option>
+              <option value="PE">Pernambuco</option><option value="PI">Piauí</option><option value="RJ">Rio de Janeiro</option><option value="RN">Rio Grande do Norte</option>
+              <option value="RS">Rio Grande do Sul</option><option value="RO">Rondônia</option><option value="RR">Roraima</option><option value="SC">Santa Catarina</option>
+              <option value="SP">São Paulo</option><option value="SE">Sergipe</option><option value="TO">Tocantins</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group"><label>Tipo de Conta <span class="required">*</span></label>
+            <select id="accountType" required>
+              <option value="">Selecione...</option>
+              <option value="corrente">Conta Corrente</option>
+              <option value="cartao">Cartão de Crédito</option>
+              <option value="ambos">Ambas</option>
+              <option value="nao-sei">Não sei</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Tipo de Documento <span class="required">*</span></label>
+            <select id="documentType" required>
+              <option value="">Selecione...</option>
+              <option value="fatura">Fatura do Cartão</option>
+              <option value="extrato">Extrato da Conta</option>
+              <option value="print">Print/Screenshot</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid full">
+          <div class="form-group full"><label>Mensagem Adicional</label><textarea id="message" placeholder="Conte-nos mais sobre suas suspeitas..."></textarea></div>
+        </div>
+
+        <div class="form-grid full">
+          <div class="form-group full">
+            <label>Upload de Documento <span class="required">*</span></label>
+            <div class="upload-area" id="uploadArea">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">Clique ou arraste para enviar</div>
+              <div class="upload-hint">PDF, JPG ou PNG • Máx. 5MB</div>
+              <input type="file" id="fileInput" hidden accept=".pdf,.jpg,.jpeg,.png" multiple>
+            </div>
+            <div class="file-list" id="fileList"></div>
+          </div>
+        </div>
+
+        <div class="form-grid full">
+          <div class="form-group full checkbox-group">
+            <input type="checkbox" id="agree" required>
+            <label for="agree">Concordo em enviar meus dados para análise e receber contato da equipe.</label>
+          </div>
+        </div>
+
+        <div class="disclaimer">🔒 Seus dados são confidenciais. Não compartilhamos informações com terceiros sem sua autorização.</div>
+        <button type="submit" class="form-submit" id="submitBtn">Analisar Meu Documento Agora</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- MODAL -->
+  <div class="modal" id="resultModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <h2>📊 Resultado da Análise</h2>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>N.H. Brandão Advogados</h3>
+        <p>Equipe especializada em análise de cobranças bancárias indevidas e recuperação de direitos dos consumidores.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Contato</h3>
+        <div class="footer-links">
+          <a href="https://wa.me/5543991032372">💬 WhatsApp: (43) 99103-2372</a>
+          <a href="mailto:contato@nhbadvocacia.com">📧 contato@nhbadvocacia.com</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3>Links Úteis</h3>
+        <div class="footer-links">
+          <a href="#como-funciona">Como Funciona</a>
+          <a href="#documentos">Documentos</a>
+          <a href="#formulario">Analisar</a>
+          <a href="#contato">Contato</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 N.H. Brandão Advogados. Todos os direitos reservados.</p>
+      <p style="margin-top: 8px;">Análise de Cobranças Bancárias | Direitos do Consumidor | Recuperação de Valores</p>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/5543991032372" class="whatsapp-btn" title="WhatsApp">💬</a>
+
+  <!-- Tesseract.js -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+  <script>
+    const state = {
+      files: [],
+      extractedText: {},
+      isProcessing: false,
+    };
+
+    function scrollTo(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validateCPF(cpf) {
+      return /^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/.test(cpf.replace(/\D/g, ''));
+    }
+
+    function validatePhone(phone) {
+      return phone.replace(/\D/g, '').length >= 10;
+    }
+
+    function validateForm() {
+      const errors = [];
+      const name = document.getElementById('name').value.trim();
+      const cpf = document.getElementById('cpf').value;
+      const email = document.getElementById('email').value;
+      const whatsapp = document.getElementById('whatsapp').value;
+      const city = document.getElementById('city').value.trim();
+      const stateVal = document.getElementById('state').value;
+      const accountType = document.getElementById('accountType').value;
+      const documentType = document.getElementById('documentType').value;
+      const agree = document.getElementById('agree').checked;
+
+      if (!name) errors.push('Nome é obrigatório');
+      if (!validateCPF(cpf)) errors.push('CPF inválido');
+      if (!validateEmail(email)) errors.push('Email inválido');
+      if (!validatePhone(whatsapp)) errors.push('WhatsApp inválido');
+      if (!city) errors.push('Cidade é obrigatória');
+      if (!stateVal) errors.push('Estado é obrigatório');
+      if (!accountType) errors.push('Tipo de conta é obrigatório');
+      if (!documentType) errors.push('Tipo de documento é obrigatório');
+      if (!agree) errors.push('Você deve concordar com os termos');
+      if (state.files.length === 0) errors.push('Você deve enviar um documento');
+
+      if (errors.length > 0) {
+        alert('Erros encontrados:\n\n' + errors.join('\n'));
+        return false;
+      }
+      return true;
+    }
+
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      for (let file of files) {
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`${file.name} é muito grande (máx. 5MB)`);
+          continue;
+        }
+        state.files.push(file);
+        renderFileList();
+        processOCR(file);
+      }
+    }
+
+    function renderFileList() {
+      const fileList = document.getElementById('fileList');
+      fileList.innerHTML = '';
+      state.files.forEach((file, idx) => {
+        const status = state.extractedText[idx] ? 'success' : 'processing';
+        const div = document.createElement('div');
+        div.className = `file-item ${status}`;
+        div.innerHTML = `<span>${file.name}</span><span class="status">${status === 'processing' ? '🔄 OCR...' : '✓'}</span>`;
+        fileList.appendChild(div);
+      });
+    }
+
+    async function processOCR(file) {
+      const fileIdx = state.files.indexOf(file);
+      try {
+        const { data: { text } } = await Tesseract.recognize(file, 'pt_BR');
+        state.extractedText[fileIdx] = text;
+        renderFileList();
+      } catch (error) {
+        alert(`Erro OCR: ${error.message}`);
+        state.extractedText[fileIdx] = '';
+        renderFileList();
+      }
+    }
+
+    document.getElementById('analyzeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!validateForm()) return;
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳ Processando...';
+
+      const extractedTexts = Object.values(state.extractedText).join('\n\n');
+
+      const payload = {
+        extractedText: extractedTexts,
+        clientName: document.getElementById('name').value,
+        clientEmail: document.getElementById('email').value,
+        clientCPF: document.getElementById('cpf').value,
+        clientPhone: document.getElementById('whatsapp').value,
+        clientCity: document.getElementById('city').value,
+        clientState: document.getElementById('state').value,
+        bankAccount: document.getElementById('accountType').value,
+        documentType: document.getElementById('documentType').value,
+      };
+
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showResultModal(result);
+          document.getElementById('analyzeForm').reset();
+          state.files = [];
+          state.extractedText = {};
+          renderFileList();
+        } else {
+          alert(`Erro: ${result.error}`);
+        }
+      } catch (error) {
+        console.error(error);
+        alert(`Erro: ${error.message}`);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Analisar Meu Documento Agora';
+      }
+    });
+
+    function showResultModal(data) {
+      const modalBody = document.getElementById('modalBody');
+      let html = '';
+
+      if (data.detectedCharges && data.detectedCharges.length > 0) {
+        html = '<p style="margin-bottom: 24px; color: var(--text-muted);">Cobranças suspeitas encontradas:</p>';
+        html += '<table class="results-table"><thead><tr><th>Categoria</th><th>Ocorrências</th><th>Confiança</th></tr></thead><tbody>';
+
+        data.detectedCharges.forEach(charge => {
+          const conf = charge.confidence || 0;
+          html += `<tr><td><strong>${charge.category}</strong></td><td>${charge.instances || 0}</td><td><div class="confidence-bar"><div class="confidence-fill" style="width: ${conf}%"></div></div><small>${conf}%</small></td></tr>`;
+        });
+
+        html += '</tbody></table>';
+        html += '<p style="margin-top: 24px; color: var(--text-muted); font-size: 12px; line-height: 1.5;">⚠️ Essa é uma análise inicial. Nossa equipe entrará em contato para discussão.</p>';
+      } else {
+        html = '<p style="color: var(--success); font-size: 16px; margin: 20px 0;">✓ Nenhuma cobrança suspeita identificada.</p>';
+        html += '<p style="color: var(--text-muted); font-size: 13px;">Recomendamos enviar outros documentos ou nossa equipe entrará em contato.</p>';
+      }
+
+      html += '<p style="color: var(--text-light); margin-top: 32px; margin-bottom: 16px;">📧 Confirmação foi enviada para seu email.</p>';
+      html += '<a href="https://wa.me/5543991032372" class="btn-primary" style="display: inline-block;">Conversar no WhatsApp</a>';
+
+      modalBody.innerHTML = html;
+      document.getElementById('resultModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('resultModal').classList.remove('active');
+    }
+  </script>
+</body>
+</html>

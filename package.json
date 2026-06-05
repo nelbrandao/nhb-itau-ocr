@@ -1,0 +1,22 @@
+{
+  "name": "ocr-landing-nhb",
+  "version": "1.0.0",
+  "description": "Landing Page com OCR automático para análise de cobranças bancárias",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["ocr", "landing", "cobranças", "análise"],
+  "author": "N.H. Brandão Advogados",
+  "license": "ISC",
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "@supabase/supabase-js": "^2.38.0",
+    "nodemailer": "^6.9.4",
+    "nodemailer-sendgrid-transport": "^1.0.0"
+  }
+}
