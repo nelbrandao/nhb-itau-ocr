@@ -25,35 +25,99 @@ if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
 }
 
 const chargeKeywords = {
-  'Seguros': ['seguro', 'proteção vida', 'prestamista', 'cartão protegido', 'proteção viagem'],
-  'Cesta de Serviços': ['cesta', 'pacote', 'serviços bancários', 'combo'],
-  'Tarifas': ['tarifa', 'taxa', 'manutenção', 'anuidade'],
-  'Proteção Financeira': ['proteção', 'financeira', 'cobertura'],
-  'Assistência': ['assistência', 'auxílio', 'suporte', 'socorro'],
-  'Bolsa Protegida': ['bolsa protegida', 'bolsa segura'],
-  'Encargos': ['encargo', 'juros', 'multa', 'mora'],
-  'Serviços de Terceiros': ['terceiros', 'serviço de terceiros', 'outsourcing'],
-  'Recorrente': ['recorrente', 'periódico', 'mensal', 'semanal'],
+  'Seguros': [
+    'seguro', 'seg vida', 'seg prest', 'seguro vida', 'seguro prestamista',
+    'seguro em grupo', 'vida em grupo', 'seg vida em grupo',
+    'cartao protegido', 'cartão protegido', 'prot cartao', 'prot cartão',
+    'seguro viagem', 'prot viagem', 'assist viagem',
+    'seguro residencial', 'seg residencial',
+    'seguro auto', 'seg auto',
+    'prestamista', 'segprestamista',
+  ],
+  'Cesta de Serviços': [
+    'cesta', 'cesta serv', 'cesta de serv', 'cesta basica',
+    'pacote serv', 'pacote de serv', 'pacote conta',
+    'mensalidade conta', 'mensalidade cartao', 'mensalidade cartão',
+    'manutencao conta', 'manutenção conta', 'man conta',
+    'tarifa manut', 'tar manut', 'tarifa mensal',
+    'servico bancario', 'serviço bancário',
+  ],
+  'Tarifas Bancárias': [
+    'tarifa', 'tar ', 'tarifas', 'taxa cobr', 'taxa de serv',
+    'anuidade', 'anuidade cartao', 'anuidade cartão',
+    'tar saldo', 'tar extrato', 'tar doc', 'tar ted',
+    'tar boleto', 'tar saque', 'tar transf',
+    'tarifa servicos diferenciados', 'tar serv dif',
+    'iof', 'cpmf',
+  ],
+  'Proteção Financeira': [
+    'protecao financeira', 'proteção financeira',
+    'prot financ', 'seg financ', 'seguro financeiro',
+    'cobertura financ', 'renda protegida',
+    'seguro desemprego', 'seg desemp',
+    'seguro perda de renda', 'perda renda',
+  ],
+  'Assistência': [
+    'assist residencial', 'assistencia residencial', 'assistência residencial',
+    'assist med', 'assist medica', 'assistência médica',
+    'assist funeral', 'assist juridica', 'assist jurídica',
+    'assist auto', 'assist veicular',
+    'club itau', 'clube itau', 'clube itaú',
+    'personnalite', 'personnalité',
+  ],
+  'Encargos e Juros': [
+    'juros rotativo', 'juros rot', 'encargo rotativo',
+    'multa atraso', 'multa por atraso', 'mora',
+    'juros mora', 'juros de mora', 'encargos',
+    'juros financiamento', 'juros emprestimo', 'juros empréstimo',
+    'cet ', 'custo efetivo', 'iof financiamento',
+    'juros parcel', 'juros parcela',
+  ],
+  'Crédito Pessoal / CDC': [
+    'cdc', 'credito pessoal', 'crédito pessoal',
+    'emprestimo', 'empréstimo', 'financiamento',
+    'parcela emprest', 'parcela financ',
+    'consignado', 'credito consig', 'crédito consig',
+    'antecipacao', 'antecipação',
+  ],
+  'Programas e Serviços Extras': [
+    'itaucard', 'itaú card', 'itaupersonalite',
+    'mastercard', 'visa', 'beneficio', 'benefício',
+    'programa pontos', 'milhas', 'fidelidade',
+    'debito automatico', 'débito automático', 'deb aut',
+    'recorrente', 'cobranca recorr', 'cobrança recorr',
+  ],
 };
 
+function normalize(str) {
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ');
+}
+
 function analyzeText(text) {
-  const textLower = text.toLowerCase();
+  const textNorm = normalize(text);
   const detectedCharges = [];
 
   for (const [category, keywords] of Object.entries(chargeKeywords)) {
     let instances = 0;
+    const matched = [];
     keywords.forEach(keyword => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'gi');
-      const matches = textLower.match(regex);
-      if (matches) instances += matches.length;
+      const kwNorm = normalize(keyword);
+      let pos = 0;
+      while ((pos = textNorm.indexOf(kwNorm, pos)) !== -1) {
+        instances++;
+        if (!matched.includes(keyword)) matched.push(keyword);
+        pos += kwNorm.length;
+      }
     });
 
     if (instances > 0) {
       detectedCharges.push({
         category,
         instances,
-        confidence: Math.min(100, 60 + instances * 10),
-        examples: keywords.slice(0, 3),
+        confidence: Math.min(95, 55 + instances * 8),
+        examples: matched.slice(0, 3),
       });
     }
   }
