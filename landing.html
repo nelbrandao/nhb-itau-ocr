@@ -644,13 +644,19 @@
 
     async function processOCR(file) {
       const fileIdx = state.files.indexOf(file);
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 90000)
+      );
       try {
-        const { data: { text } } = await Tesseract.recognize(file, 'pt_BR');
+        const { data: { text } } = await Promise.race([
+          Tesseract.recognize(file, 'por', { logger: () => {} }),
+          timeout,
+        ]);
         state.extractedText[fileIdx] = text || ' ';
         renderFileList();
       } catch (error) {
         console.error('Erro OCR:', error);
-        state.extractedText[fileIdx] = 'erro-ocr';
+        state.extractedText[fileIdx] = error.message === 'timeout' ? 'timeout-ocr' : 'erro-ocr';
         renderFileList();
       }
     }
