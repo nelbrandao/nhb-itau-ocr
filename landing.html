@@ -375,7 +375,7 @@
       <form id="analyzeForm">
         <div class="form-grid">
           <div class="form-group"><label>Nome Completo <span class="required">*</span></label><input type="text" id="name" required></div>
-          <div class="form-group"><label>CPF <span class="required">*</span></label><input type="text" id="cpf" placeholder="000.000.000-00" required></div>
+          <div class="form-group"><label>CPF</label><input type="text" id="cpf" placeholder="000.000.000-00"></div>
         </div>
 
         <div class="form-grid">
@@ -384,10 +384,9 @@
         </div>
 
         <div class="form-grid">
-          <div class="form-group"><label>Cidade <span class="required">*</span></label><input type="text" id="city" required></div>
-          <div class="form-group"><label>Estado <span class="required">*</span></label>
-            <select id="state" required>
-              <option value="">Selecione...</option>
+          <div class="form-group"><label>Estado</label>
+            <select id="state" onchange="loadCities()">
+              <option value="">Selecione o estado...</option>
               <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option><option value="AM">Amazonas</option>
               <option value="BA">Bahia</option><option value="CE">Ceará</option><option value="DF">Distrito Federal</option><option value="ES">Espírito Santo</option>
               <option value="GO">Goiás</option><option value="MA">Maranhão</option><option value="MT">Mato Grosso</option><option value="MS">Mato Grosso do Sul</option>
@@ -397,11 +396,16 @@
               <option value="SP">São Paulo</option><option value="SE">Sergipe</option><option value="TO">Tocantins</option>
             </select>
           </div>
+          <div class="form-group"><label>Cidade</label>
+            <select id="city" disabled>
+              <option value="">Selecione o estado primeiro...</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-grid">
-          <div class="form-group"><label>Tipo de Conta <span class="required">*</span></label>
-            <select id="accountType" required>
+          <div class="form-group"><label>Tipo de Conta</label>
+            <select id="accountType">
               <option value="">Selecione...</option>
               <option value="corrente">Conta Corrente</option>
               <option value="cartao">Cartão de Crédito</option>
@@ -409,8 +413,8 @@
               <option value="nao-sei">Não sei</option>
             </select>
           </div>
-          <div class="form-group"><label>Tipo de Documento <span class="required">*</span></label>
-            <select id="documentType" required>
+          <div class="form-group"><label>Tipo de Documento</label>
+            <select id="documentType">
               <option value="">Selecione...</option>
               <option value="fatura">Fatura do Cartão</option>
               <option value="extrato">Extrato da Conta</option>
@@ -504,12 +508,32 @@
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
     }
 
-    function validateEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Carregar cidades via IBGE API
+    async function loadCities() {
+      const uf = document.getElementById('state').value;
+      const citySelect = document.getElementById('city');
+      citySelect.disabled = true;
+      citySelect.innerHTML = '<option value="">Carregando cidades...</option>';
+      if (!uf) { citySelect.innerHTML = '<option value="">Selecione o estado primeiro...</option>'; return; }
+      try {
+        const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`);
+        const cities = await res.json();
+        citySelect.innerHTML = '<option value="">Selecione a cidade...</option>';
+        cities.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.nome;
+          opt.textContent = c.nome;
+          citySelect.appendChild(opt);
+        });
+        citySelect.disabled = false;
+      } catch(e) {
+        citySelect.innerHTML = '<option value="">Erro ao carregar - digite manualmente</option>';
+        citySelect.disabled = false;
+      }
     }
 
-    function validateCPF(cpf) {
-      return /^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/.test(cpf.replace(/\D/g, ''));
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     function validatePhone(phone) {
@@ -519,30 +543,20 @@
     function validateForm() {
       const errors = [];
       const name = document.getElementById('name').value.trim();
-      const cpf = document.getElementById('cpf').value;
       const email = document.getElementById('email').value;
       const whatsapp = document.getElementById('whatsapp').value;
-      const city = document.getElementById('city').value.trim();
-      const stateVal = document.getElementById('state').value;
-      const accountType = document.getElementById('accountType').value;
-      const documentType = document.getElementById('documentType').value;
       const agree = document.getElementById('agree').checked;
 
       if (!name) errors.push('Nome é obrigatório');
-      if (!validateCPF(cpf)) errors.push('CPF inválido');
       if (!validateEmail(email)) errors.push('Email inválido');
       if (!validatePhone(whatsapp)) errors.push('WhatsApp inválido');
-      if (!city) errors.push('Cidade é obrigatória');
-      if (!stateVal) errors.push('Estado é obrigatório');
-      if (!accountType) errors.push('Tipo de conta é obrigatório');
-      if (!documentType) errors.push('Tipo de documento é obrigatório');
       if (!agree) errors.push('Você deve concordar com os termos');
       if (state.files.length === 0) errors.push('Você deve enviar um documento');
       const totalExtracted = Object.values(state.extractedText).join('').trim();
-      if (state.files.length > 0 && !totalExtracted) errors.push('Aguarde o OCR terminar de processar o documento (pode levar até 60s)');
+      if (state.files.length > 0 && !totalExtracted) errors.push('Aguarde o OCR terminar de processar o documento');
 
       if (errors.length > 0) {
-        alert('Erros encontrados:\n\n' + errors.join('\n'));
+        alert('Atenção:\n\n' + errors.join('\n'));
         return false;
       }
       return true;
@@ -584,6 +598,18 @@
       }
     }
 
+    function removeFile(idx) {
+      state.files.splice(idx, 1);
+      const newExtracted = {};
+      Object.keys(state.extractedText).forEach(k => {
+        const ki = parseInt(k);
+        if (ki < idx) newExtracted[ki] = state.extractedText[ki];
+        else if (ki > idx) newExtracted[ki - 1] = state.extractedText[ki];
+      });
+      state.extractedText = newExtracted;
+      renderFileList();
+    }
+
     function renderFileList() {
       const fileList = document.getElementById('fileList');
       fileList.innerHTML = '';
@@ -595,7 +621,13 @@
         if (!done) anyProcessing = true;
         const div = document.createElement('div');
         div.className = `file-item ${done ? 'success' : 'processing'}`;
-        div.innerHTML = `<span>${file.name}</span><span class="status">${done ? '✓ OCR pronto' : '🔄 Processando OCR, aguarde...'}</span>`;
+        div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-subtle);';
+        div.innerHTML = `
+          <span style="font-size:13px; color:var(--text-light);">${file.name}</span>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span style="font-size:12px; color:${done ? 'var(--success)' : 'var(--alert)'};">${done ? '✓ OCR pronto' : '🔄 Processando...'}</span>
+            <button onclick="removeFile(${idx})" type="button" style="background:none; border:1px solid rgba(255,100,100,0.4); color:#ff6b6b; border-radius:4px; padding:2px 8px; cursor:pointer; font-size:12px;">✕ Remover</button>
+          </div>`;
         fileList.appendChild(div);
       });
 
