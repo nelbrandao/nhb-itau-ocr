@@ -177,24 +177,27 @@ app.get('/health', (req, res) => {
 
 // Contador de visitas
 const BASE_VIEWS = 501000;
+
 app.post('/api/views', async (req, res) => {
   if (!supabase) return res.json({ views: BASE_VIEWS });
   try {
-    // Incrementa e retorna o total
     const { data, error } = await supabase.rpc('increment_views');
     if (error) throw error;
-    res.json({ views: BASE_VIEWS + (data || 0) });
+    res.json({ views: BASE_VIEWS + Number(data || 0) });
   } catch (e) {
-    res.json({ views: BASE_VIEWS });
+    console.error('Views error:', e.message);
+    try {
+      const { data } = await supabase.from('page_views').select('count').eq('id', 1).single();
+      res.json({ views: BASE_VIEWS + Number(data?.count || 0) });
+    } catch { res.json({ views: BASE_VIEWS }); }
   }
 });
 
 app.get('/api/views', async (req, res) => {
   if (!supabase) return res.json({ views: BASE_VIEWS });
   try {
-    const { data, error } = await supabase.from('page_views').select('count').single();
-    if (error) throw error;
-    res.json({ views: BASE_VIEWS + (data?.count || 0) });
+    const { data } = await supabase.from('page_views').select('count').eq('id', 1).single();
+    res.json({ views: BASE_VIEWS + Number(data?.count || 0) });
   } catch (e) {
     res.json({ views: BASE_VIEWS });
   }
