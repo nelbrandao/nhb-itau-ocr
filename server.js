@@ -170,6 +170,31 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', supabase: !!supabase, email: !!transporter });
 });
 
+// Contador de visitas
+const BASE_VIEWS = 501000;
+app.post('/api/views', async (req, res) => {
+  if (!supabase) return res.json({ views: BASE_VIEWS });
+  try {
+    // Incrementa e retorna o total
+    const { data, error } = await supabase.rpc('increment_views');
+    if (error) throw error;
+    res.json({ views: BASE_VIEWS + (data || 0) });
+  } catch (e) {
+    res.json({ views: BASE_VIEWS });
+  }
+});
+
+app.get('/api/views', async (req, res) => {
+  if (!supabase) return res.json({ views: BASE_VIEWS });
+  try {
+    const { data, error } = await supabase.from('page_views').select('count').single();
+    if (error) throw error;
+    res.json({ views: BASE_VIEWS + (data?.count || 0) });
+  } catch (e) {
+    res.json({ views: BASE_VIEWS });
+  }
+});
+
 app.post('/api/analyze', async (req, res) => {
   try {
     const { extractedText, clientName, clientEmail, clientCPF, clientPhone, clientCity, clientState, bankAccount, documentType } = req.body;
