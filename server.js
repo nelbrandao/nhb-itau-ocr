@@ -16,11 +16,16 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_KEY) {
 
 // Configurar email (opcional)
 let transporter = null;
-if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
   const nodemailer = require('nodemailer');
   transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASSWORD },
+    host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
+    port: parseInt(process.env.EMAIL_PORT || '465'),
+    secure: true,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
   });
 }
 
@@ -135,7 +140,7 @@ async function sendEmails(clientData, detectedCharges) {
        </table>`
     : '<p>Nenhuma cobrança suspeita identificada.</p>';
 
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER;
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
 
   await Promise.all([
     transporter.sendMail({
@@ -167,7 +172,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', supabase: !!supabase, email: !!transporter });
+  res.json({ status: 'ok', supabase: !!supabase, email: !!transporter, emailUser: process.env.EMAIL_USER || null });
 });
 
 // Contador de visitas
